@@ -3,6 +3,7 @@ from fastapi import APIRouter
 from ..db.db import database, User
 
 router = APIRouter()
+##https://fastapi.tiangolo.com/tutorial/security/simple-oauth2/
 
 @router.get("/users/", tags=["users"])
 async def read_users():
@@ -15,5 +16,4 @@ async def read_user_me():
 
 @router.get("/users/{username}", tags=["users"])
 async def read_user(username: str):
-    
     return {"username": username}
