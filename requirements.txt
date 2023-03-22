@@ -1,2 +1,5 @@
 fastapi
 uvicorn[standard]
+asyncpg
+ormar
+psycopg2-binary

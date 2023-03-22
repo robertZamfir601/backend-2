@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 ##include dependencies
-from dependencies import get_token_header, get_query_token
+from ..dependencies import get_token_header, get_query_token
 
 router = APIRouter(
     prefix="/items",
