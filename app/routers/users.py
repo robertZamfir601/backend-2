@@ -3,7 +3,7 @@ from fastapi import APIRouter
 from ..db.db import database, User
 
 router = APIRouter()
-##https://fastapi.tiangolo.com/tutorial/security/simple-oauth2/
+##https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/
 
 @router.get("/users/", tags=["users"])
 async def read_users():
