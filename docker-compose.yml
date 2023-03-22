@@ -1,3 +1,4 @@
+# docker-compose.yml
 
 version: '3.8'
 
@@ -8,7 +9,7 @@ services:
     volumes:
       - .:/app
     ports:
-      - 8008:8000
+      - 8000:8000
     environment:
       - DATABASE_URL=postgresql://fastapi_traefik:fastapi_traefik@db:5432/fastapi_traefik
     depends_on:

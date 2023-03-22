@@ -1,1 +1,1 @@
-python -m uvicorn main:app --reload
+docker-compose up
