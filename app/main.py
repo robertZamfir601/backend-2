@@ -8,7 +8,7 @@ from uvicorn import Config, Server
 from .dependencies import get_query_token, get_token_header
 from .internal import admin
 from .routers import items, users
-from .db.db import database, User
+from .db.db import database, User, Website, Product, CartedProd
 from .test.test import add_user
 
 app = FastAPI()##dependencies=[Depends(get_query_token)]
@@ -41,9 +41,6 @@ async def register(request: Request):
 @app.get("/profile", response_class=HTMLResponse)
 async def profile(request: Request):
     return templates.TemplateResponse("profile.html",{ "request": request })
-
-
-
 
 
 @app.on_event("startup")
