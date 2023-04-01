@@ -59,6 +59,13 @@ class CartedProd(ormar.Model):
     user_id: Optional[User] = ormar.ForeignKey(User)
     product_id: Optional[Product] = ormar.ForeignKey(Product)
 
+    def to_json(self):
+        return {
+            'entry_id': self.entry_id,
+            'user_id': self.user_id.id if self.user_id is not None else None,
+            'product_id': self.product_id.id if self.product_id is not None else None
+        }
+
 
 engine = sqlalchemy.create_engine(settings.db_url)
 metadata.create_all(engine)

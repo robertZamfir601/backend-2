@@ -46,3 +46,4 @@ async def add_user():
     await CartedProd.objects.get_or_create(user_id=r[0], product_id=p3[0])
     await CartedProd.objects.get_or_create(user_id=r[0], product_id=p4[0])
 
+

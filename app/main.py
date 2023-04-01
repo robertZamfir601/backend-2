@@ -3,11 +3,12 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from uvicorn import Config, Server
+from ormar import Model, Integer, String, QuerySet
 
 ##our files
 from .dependencies import get_query_token, get_token_header
 from .internal import admin
-from .routers import items, users
+from .routers import items, users, get_cart
 from .db.db import database, User, Website, Product, CartedProd
 from .test.test import add_user
 
@@ -16,6 +17,7 @@ app.mount("/frontend", StaticFiles(directory="app/frontend/static"), name="stati
 templates = Jinja2Templates(directory="./app/frontend/templates")
 app.include_router(users.router)
 app.include_router(items.router)
+app.include_router(get_cart.router)
 app.include_router(
     admin.router,
     prefix="/admin",
@@ -42,6 +44,9 @@ async def register(request: Request):
 async def profile(request: Request):
     return templates.TemplateResponse("profile.html",{ "request": request })
 
+# @app.get("/get_cart", response_class=HTMLResponse)
+# async def get_cart(request: Request):
+#     return templates.TemplateResponse("get_cart.html",{ "request": request })
 
 @app.on_event("startup")
 async def startup():
@@ -50,10 +55,12 @@ async def startup():
     # create a dummy entry
     await add_user()
 
+
 @app.on_event("shutdown")
 async def shutdown():
     if database.is_connected:
         await database.disconnect()
+
 
 if __name__ == "__main__":  # pragma: no cover
     server = Server(
