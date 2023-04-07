@@ -71,7 +71,7 @@ background-position: center center;
                 <h3 class="login-heading mb-4">Start today to change your shooping habbits!</h3>
   
                 <!-- Sign In Form -->
-                <form action="{{ url_for('register') }}" method="post" autocomplete="off">
+                <form action="http://localhost:8000/register" method="post" autocomplete="off">
                   <div class="form-floating mb-3">
                     <input name="username" type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
                     <label for="floatingInput">Email address</label>
@@ -87,7 +87,7 @@ background-position: center center;
                   </div>
   
                   <div class="d-grid">
-                    <button class="btn btn-lg btn-primary btn-login text-uppercase fw-bold mb-2" type="submit">Sign in</button>
+                    <button class="btn btn-lg btn-primary btn-login text-uppercase fw-bold mb-2 link-button" type="submit">Sign in</button>
                     <div class="text-center">
                       <a class="small" href="#">Forgot password?</a>
                     </div>
