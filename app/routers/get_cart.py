@@ -54,7 +54,6 @@ async def get_cart(payload: dict):
         products = await Product.objects.filter(website_id=curr_id, id__in=product_ids).all()
         website = await Website.objects.get(id=curr_id)
         carted_prods_json += [prod.to_json(website) for prod in products]
-
     if(order == 'PriceCresc'):
         carted_prods_json.sort(key=lambda x: float(x['price'].replace(',', '')))
     elif(order == 'PriceDesc'):
@@ -73,3 +72,4 @@ async def get_cart(payload: dict):
         "msg": "This is your product list",
         "products": carted_prods_json
     })
+    
