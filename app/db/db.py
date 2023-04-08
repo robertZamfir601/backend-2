@@ -46,6 +46,16 @@ class Product(ormar.Model):
     category: str = ormar.String(max_length = 300, nullable=True)
     image: str = ormar.String(max_length = 1000, nullable = True)
     price: str = ormar.String(max_length = 30, nullable=False)
+
+    def to_json(self, website):
+        return {
+            'id': self.id,
+            'product_name': self.product_name,
+            'price': self.price,
+            'image': self.image,
+            'website_base_url': website.base_url if website is not None else None
+        }
+   
     
 
 # ormar has a functionality to automatically create
