@@ -7,7 +7,7 @@ from uvicorn import Config, Server
 ##our files
 from .dependencies import get_query_token, get_token_header
 from .internal import admin
-from .routers import items, users
+from .routers import items, users, websites
 from .db.db import database, User, Website, Product, CartedProd
 from .test.test import add_user
 
@@ -16,6 +16,7 @@ app.mount("/frontend", StaticFiles(directory="app/frontend/static"), name="stati
 templates = Jinja2Templates(directory="./app/frontend/templates")
 app.include_router(users.router)
 app.include_router(items.router)
+app.include_router(websites.router)
 app.include_router(
     admin.router,
     prefix="/admin",

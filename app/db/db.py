@@ -34,21 +34,10 @@ class Website(ormar.Model):
     id: int = ormar.Integer(primary_key=True, auto_increment=True)
     base_url: str = ormar.String(max_length=500, nullable=False, unique=True)
     name: str = ormar.String(max_length=100, nullable=True)
-    category: str = ormar.String( nullable=False)	# Cat, Cat2, Cat3
-    xpath_include: dict = ormar.JSON(nullable=False, default={})
-    xpath_exclude: dict = ormar.JSON(nullable=False, default={})
-
-    @ormar.pre_save()
-    async def encode_xpath_dicts(self):
-        self.xpath_include = json.dumps(self.xpath_include)
-        self.xpath_exclude = json.dumps(self.xpath_exclude)
-
-    @ormar.post_load()
-    async def decode_xpath_dicts(self):
-        self.xpath_include = json.loads(self.xpath_include)
-        self.xpath_exclude = json.loads(self.xpath_exclude)
-
-        
+    category: str = ormar.Text(nullable=False)
+    xpath: str = ormar.Text(nullable=False)
+    domain: str = ormar.String(max_length=100, nullable=True)
+    country: str = ormar.Text(nullable=False) ##country where website is used or countrys where website is used all(for all countrys)
 
 class Product(ormar.Model):
     class Meta(BaseMeta):
