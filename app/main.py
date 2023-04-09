@@ -3,6 +3,8 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from uvicorn import Config, Server
+from jose import jwt
+from pydantic import BaseModel
 
 ### FAST api security
 from fastapi import HTTPException, status, FastAPI, HTTPException
@@ -18,7 +20,7 @@ from typing import Annotated, Union
 
 
 ### Register - Login ours
-from .backend.utils import ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token
+from .backend.utils import ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, authenticate_user, SECRET_KEY, ALGORITHM
 from .backend.RegLogin.register import add_user_to_database
 
 ###
@@ -73,7 +75,7 @@ async def registerUser(request: Request,
             detail="Username already taken",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    else:   
+    else:
         user = await add_user_to_database(form_data.username, form_data.password)
     if not user:
             raise HTTPException(
@@ -93,6 +95,23 @@ async def registerUser(request: Request,
 @app.get("/profile", response_class=HTMLResponse)
 async def profile(request: Request):
     return templates.TemplateResponse("profile.html",{ "request": request })
+
+class Token(BaseModel):
+    access_token: str
+    code: int
+
+@app.post("/login", response_model=Token)
+async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
+    print(await User.objects.all())
+    user = await authenticate_user(form_data.username, form_data.password)
+    if not user:
+        return {"code": 401, "access_token": ""}
+
+    token = create_access_token(data = {"email":  user.email})
+    user.token = token
+    await user.update()
+    print(jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)['exp'])
+    return {"code": 200, "access_token": token}
 
 
 @app.on_event("startup")
@@ -116,7 +135,7 @@ if __name__ == "__main__":  # pragma: no cover
             reload=True,
         ),
     )
-    
-    # do something you want before running the server 
+
+    # do something you want before running the server
     # eg. setting up custom loggers
     server.run()
