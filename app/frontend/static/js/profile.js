@@ -59,6 +59,9 @@ async function getProducts(){
   }
 
 function ex(products) {
+    const productContainer = document.getElementById("product-list-tag-id");
+  // clear the content of the container
+    productContainer.innerHTML = "";
     for (let i = 0; i < products.length; i++) {
       const product = products[i];
       let cards_boots=`
@@ -74,6 +77,7 @@ function ex(products) {
               </div>
               </div>
               `;
-              document.getElementById("product-list-tag-id").innerHTML +=cards_boots;
+              //document.getElementById("product-list-tag-id").innerHTML +=cards_boots;
+              productContainer.innerHTML += cards_boots;
     }
 }
