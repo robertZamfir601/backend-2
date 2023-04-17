@@ -1,12 +1,17 @@
-from fastapi import Depends, FastAPI, Request
+from fastapi import Depends, FastAPI, Request, Cookie
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from uvicorn import Config, Server
+
+from jose import jwt
+from pydantic import BaseModel
+from app.backend.utils import get_user
+
 from ormar import Model, Integer, String, QuerySet
 
 ### FAST api security
-from fastapi import HTTPException, status, FastAPI, HTTPException
+from fastapi import HTTPException, status, FastAPI, HTTPException, Header
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 ###
 
@@ -19,7 +24,7 @@ from typing import Annotated, Union
 
 
 ### Register - Login ours
-from .backend.utils import ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token
+from .backend.utils import ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, authenticate_user, SECRET_KEY, ALGORITHM
 from .backend.RegLogin.register import add_user_to_database
 
 ###
@@ -31,6 +36,7 @@ from .internal import admin
 from .routers import items, users, get_cart
 from .db.db import database, User, Website, Product, CartedProd
 from .test.test import add_user
+from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 
 app = FastAPI()##dependencies=[Depends(get_query_token)]
 app.mount("/frontend", StaticFiles(directory="app/frontend/static"), name="static")
@@ -46,11 +52,24 @@ app.include_router(
     responses={418: {"description": "I'm a teapot"}},
 )
 
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 ##routes html application
 @app.get("/", response_class=HTMLResponse)
-async def index_html(request: Request):
-    return templates.TemplateResponse("index.html",{ "request": request })
+async def index_html(request: Request, token: Annotated[str | None, Cookie()] = None):
+
+    if token == None:
+        print("no token")
+        return templates.TemplateResponse("index.html",{ "request": request })
+    else:
+        print(jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM))
+        data = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
+        user = await get_user(data["email"])
+        print(data["email"])
+        if user.token == token:
+            return templates.TemplateResponse("index-login.html",{ "request": request })
+        else:
+            return templates.TemplateResponse("index.html",{ "request": request })
 
 @app.get("/login", response_class=HTMLResponse)
 async def login(request: Request):
@@ -75,7 +94,7 @@ async def registerUser(request: Request,
             detail="Username already taken",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    else:   
+    else:
         user = await add_user_to_database(form_data.username, form_data.password)
     if not user:
             raise HTTPException(
@@ -96,9 +115,24 @@ async def registerUser(request: Request,
 async def profile(request: Request):
     return templates.TemplateResponse("profile.html",{ "request": request })
 
-# @app.get("/get_cart", response_class=HTMLResponse)
-# async def get_cart(request: Request):
-#     return templates.TemplateResponse("get_cart.html",{ "request": request })
+class Token(BaseModel):
+    access_token: str
+    code: int
+
+@app.post("/login", response_model=Token)
+async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
+    print(await User.objects.all())
+    user = await authenticate_user(form_data.username, form_data.password)
+    if not user:
+        return {"code": 401, "access_token": ""}
+
+    token = create_access_token(data = {"email":  user.email})
+    user.token = token
+    await user.update()
+    print(jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)['exp'])
+    return {"code": 200, "access_token": token}
+
+
 
 @app.on_event("startup")
 async def startup():
@@ -123,7 +157,7 @@ if __name__ == "__main__":  # pragma: no cover
             reload=True,
         ),
     )
-    
-    # do something you want before running the server 
+
+    # do something you want before running the server
     # eg. setting up custom loggers
     server.run()

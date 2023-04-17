@@ -4,3 +4,8 @@ jinja2
 asyncpg
 ormar
 psycopg2-binary
+passlib
+python-jose
+python-multipart
+typing
+pydantic
