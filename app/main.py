@@ -7,33 +7,20 @@ from uvicorn import Config, Server
 from jose import jwt
 from pydantic import BaseModel
 from app.backend.utils import get_user
-
 from ormar import Model, Integer, String, QuerySet
-
 ### FAST api security
 from fastapi import HTTPException, status, FastAPI, HTTPException, Header
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-###
-
-
 ### Types
-
 from datetime import datetime, timedelta
 from typing import Annotated, Union
-###
-
-
 ### Register - Login ours
 from .backend.utils import ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, authenticate_user, SECRET_KEY, ALGORITHM
 from .backend.RegLogin.register import add_user_to_database
-
-###
-
-
 ##our files
 from .dependencies import get_token_header
 from .internal import admin
-from .routers import items, users, get_cart
+from .routers import items, users, websites, get_cart
 from .db.db import database, User, Website, Product, CartedProd
 from .test.test import add_user
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
@@ -43,6 +30,7 @@ app.mount("/frontend", StaticFiles(directory="app/frontend/static"), name="stati
 templates = Jinja2Templates(directory="./app/frontend/templates")
 app.include_router(users.router)
 app.include_router(items.router)
+app.include_router(websites.router)
 app.include_router(get_cart.router)
 app.include_router(
     admin.router,
