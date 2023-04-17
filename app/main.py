@@ -1,13 +1,13 @@
-from fastapi import Depends, FastAPI, Request
+from fastapi import Depends, FastAPI, Request, Cookie
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from uvicorn import Config, Server
 from jose import jwt
 from pydantic import BaseModel
-
+from app.backend.utils import get_user
 ### FAST api security
-from fastapi import HTTPException, status, FastAPI, HTTPException
+from fastapi import HTTPException, status, FastAPI, HTTPException, Header
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 ###
 
@@ -32,6 +32,7 @@ from .internal import admin
 from .routers import items, users
 from .db.db import database, User, Website, Product, CartedProd
 from .test.test import add_user
+from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 
 app = FastAPI()##dependencies=[Depends(get_query_token)]
 app.mount("/frontend", StaticFiles(directory="app/frontend/static"), name="static")
@@ -46,11 +47,24 @@ app.include_router(
     responses={418: {"description": "I'm a teapot"}},
 )
 
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 ##routes html application
 @app.get("/", response_class=HTMLResponse)
-async def index_html(request: Request):
-    return templates.TemplateResponse("index.html",{ "request": request })
+async def index_html(request: Request, token: Annotated[str | None, Cookie()] = None):
+
+    if token == None:
+        print("no token")
+        return templates.TemplateResponse("index.html",{ "request": request })
+    else:
+        print(jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM))
+        data = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
+        user = await get_user(data["email"])
+        print(data["email"])
+        if user.token == token:
+            return templates.TemplateResponse("index-login.html",{ "request": request })
+        else:
+            return templates.TemplateResponse("index.html",{ "request": request })
 
 @app.get("/login", response_class=HTMLResponse)
 async def login(request: Request):
