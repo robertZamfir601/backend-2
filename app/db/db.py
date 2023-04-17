@@ -24,7 +24,7 @@ class User(ormar.Model):
     password: str = ormar.String(max_length=300, nullable=True, default="")        	# can have this of token_google, but not both
     token_google: str = ormar.String(max_length=300, nullable=True, default="")     # can have this of password, but not both
     creted_at: datetime.datetime = ormar.DateTime(default=datetime.datetime.now)	# set to crt datetime each time you call an endpoint
-
+    token: str = ormar.String(max_length=500, nullable=True, default="")
 
 class Website(ormar.Model):
     class Meta(BaseMeta):

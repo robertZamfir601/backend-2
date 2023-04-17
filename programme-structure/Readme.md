@@ -41,18 +41,22 @@
 {
    "code": "0",
    "token": "setByFastapi",
-} // registresation successfully 
+}
 ``` 
+   - registresation successfully 
 ```json
 {
    "code": "1",
-} // username already used - no need for cookie
-``` 
+} 
+```
+   - username already used - no need for cookie
 ```json
 {
    "code": "2",
-} // email already used - no need for cookie 
+} 
 ``` 
+   - email already used - no need for cookie 
+
    - face interogări pe baza de date pentru a vedea toate cele de mai sus (dacă datele sunt corecte)
    - `token_google` se pune pe `NULL`
    - în caz de register cu succes, adaugă userul în tabelul `Users`, de asemenea setează câmpurile de `created_at` și `last_login` la momentul curent
@@ -81,22 +85,26 @@
    "msg": "Login succ",
    "token": "setByFastapi"
 
-} // login successfully 
-``` 
+} 
+```
+   - login successfully 
 ```json
 {
    "code": "1",
    "msg": "Invalid login",
    "token": ""
-} // username or password not valid
-``` 
+} 
+```  
+   - username or password not valid
 ```json
 {
    "code": "3",
    "msg": "Already logged in",
    "token": ""
-} // user is already logged in
-``` 
+} 
+```  
+   - user is already logged in
+
    - face interogări pe baza de date pentru a vedea toate cele de mai sus (validează datele)
    - în caz de logare cu succes, in tabelul `Users` se actualizează `last_login` si `token`
 
@@ -109,8 +117,10 @@
 {
    "url" : "url-for-the-product-on-the-site",
    "token": "genertedByFastApi"
-} // the cookie should be included
+} 
 ```
+   - the cookie should be included
+
    - raspunde la mesajele din backend si afiseaza modale cu `Added to cart` sau redirect catre `Login/Register Page` daca userul nu este logat.
 * Backend:
    - are regula de pt. când se face POST pe url `{baseURL}/addProdToCart`:
@@ -119,14 +129,17 @@
 {
    "code": "0",
    "msg": "Add to cart",
-} // Userul este logat si produsul a fost adaugat cu succes
+} 
 ``` 
+   - Userul este logat si produsul a fost adaugat cu succes
 ```json
 {
    "code": "1",
    "msg": "Not logged in"
-} // nu are un cookie valid pt sesiunea curenta auserului (daca aceasta exista) sau userul nu apare ca logat in baza de date.
+} 
 ``` 
+   - nu are un cookie valid pt sesiunea curenta auserului (daca aceasta exista) sau userul nu apare ca logat in baza de date.
+
    - adaugă produsul in baza de date in tabela `username` cu toate câmpurile din aceasta
 
 
@@ -140,8 +153,10 @@
    "sites": ["Emag", "Amazon"],
    "order": "PriceDesc" | "PriceCresc",
    "token": "generatedByFastapi"
-} // the cookie should be included
+} 
 ```
+   - the cookie should be included
+
    - raspunde la mesajele din backend 
    - parsează jsonul primit ca raspuns și afisează obiectele corespunzătoare.
    - se verifica sa se trimita doar date valide in campurile `order` și `sites`
@@ -171,20 +186,24 @@
          "productUrl": "Url3"
       }
    ],
-} // cookie is valid and the request makes sense
+} 
 ``` 
+   - cookie is valid and the request makes sense
 ```json
 {
    "code": "1",
    "msg": "Not logged in"
-} // nu are un cookie valid pt sesiunea curenta a userului (daca aceasta exista) sau userul nu apare ca logat in baza de date.
+} 
+// nu are un cookie valid pt sesiunea curenta a userului (daca aceasta exista) sau userul nu apare ca logat in baza de date.
 ``` 
 ```json
 {
    "code": "2",
    "msg": "quesrry params are bad"
-} // ceva e in neregula in `sites` sau `order`
+} 
 ```
+   - ceva e in neregula in `sites` sau `order`
+
    - se face querry catre baza de date pentru a afla produsele
    - Filtre: 
       - afiseaza doar produsele de pe `site`-urile din `sites`
@@ -211,14 +230,17 @@
 {
    "code": "0",
    "msg": "Logout succ",
-} // logout succ
+} 
 ``` 
+   - logout succ
 ```json
 {
    "code": "1",
    "msg": "Invalid token",
-} // invalid token for session, BIG PROBLEM, shouldn't happen
+} 
 ``` 
+   - invalid token for session, BIG PROBLEM, shouldn't happen
+   
    - face interogări pe baza de date pentru a vedea toate cele de mai sus (validează datele)
    - în caz de delogare cu succes, in tabelul `Users` se actualizează `token`
    **Note** 
