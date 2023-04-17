@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Techie Bootstrap Template - Index</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="frontend/img/favicon.png" rel="icon">
+  <link href="frontend/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Roboto:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/fontawesome.min.css" integrity="sha384-QYIZto+st3yW+o8+5OHfT6S482Zsvz2WfOzpFSXMF9zqeLcFV0/wlZpMtyFcZALm" crossorigin="anonymous">
+  <!-- Vendor CSS Files -->
+  <link href="frontend/vendor/aos/aos.css" rel="stylesheet">
+  <link href="frontend/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="frontend/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="frontend/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="frontend/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="frontend/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+
+  <!-- Template Main CSS File -->
+  <link href="frontend/css/style.css" rel="stylesheet">
+  <link href="frontend/css/profile.css" rel="stylesheet">
+  <link href="frontend/css/style.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="fixed-top ">
+    <div class="container d-flex align-items-center justify-content-between">
+      <h1 class="logo"><a href="index.html">Karti</a></h1>
+      <!-- Uncomment below if you prefer to use an image logo -->
+      <!-- <a href="index.html" class="logo"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li><a class="nav-link scrollto" href="index.html">Home</a></li>
+          <li><a class="nav-link scrollto active" href="#cart">Cart</a></li>
+          <li><a class="nav-link scrollto" href="#about">About</a></li>
+          <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
+          <li><a class="getstarted scrollto" href="logout.html">Logout</a></li>
+
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav><!-- .navbar -->
+    </div>
+  </header><!-- End Header -->
+
+
+   <!-- ======= Cart ======= -->
+   <section id="portfolio-details" class="portfolio-details">
+   <div class="container add-padding" >
+    <h3 class="h3">Cart </h3>
+    <div class="container">
+      <div class="row">
+        <div class="col-2">
+          <div class="col-1"></div>
+          <div class="col-9">
+            <div class = "row">
+              <h5 class="card-title"> Select site: </h5>
+              <button type="button" onclick="getDataAll()" class="btn btn-outline-primary">All</button>
+              <button type="button" onclick="getDataEmag()" class="btn btn-outline-primary">Emag</button>
+              <button type="button" class="btn btn-outline-primary">Primary</button>
+              <button type="button" class="btn btn-outline-primary">Primary</button>
+              <button type="button" class="btn btn-outline-primary">Primary</button>
+           </div>
+          </div>
+          <div class="col-1"></div>
+        </div>
+        <div class="col-10">
+          <div class="col-10"></div>
+          <div id="product-list">
+            <ul class="product-grid" id="product-list-tag-id">
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+   </div>
+  </section>
+<hr>
+
+
+
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="frontend/vendor/purecounter/purecounter_vanilla.js"></script>
+  <script src="frontend/vendor/aos/aos.js"></script>
+  <script src="frontend/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="frontend/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="frontend/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="frontend/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="frontend/vendor/php-email-form/validate.js"></script>
+  <script src="frontend/js/list.js"></script>
+  <script src="frontend/js/main.js"></script>
+  <!-- Template Main JS File -->
+
+</body>
+
+</html>
