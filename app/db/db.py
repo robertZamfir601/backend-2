@@ -25,7 +25,7 @@ class User(ormar.Model):
     password: str = ormar.String(max_length=300, nullable=True, default="")        	# can have this of token_google, but not both
     token_google: str = ormar.String(max_length=300, nullable=True, default="")     # can have this of password, but not both
     creted_at: datetime.datetime = ormar.DateTime(default=datetime.datetime.now)	# set to crt datetime each time you call an endpoint
-
+    token: str = ormar.String(max_length=500, nullable=True, default="")
 
 class Website(ormar.Model):
     class Meta(BaseMeta):
@@ -49,6 +49,16 @@ class Product(ormar.Model):
     category: str = ormar.String(max_length = 300, nullable=True)
     image: str = ormar.String(max_length = 1000, nullable = True)
     price: str = ormar.String(max_length = 30, nullable=False)
+
+    def to_json(self, website):
+        return {
+            'id': self.id,
+            'product_name': self.product_name,
+            'price': self.price,
+            'image': self.image,
+            'website_base_url': website.base_url if website is not None else None
+        }
+   
     
 
 # ormar has a functionality to automatically create
@@ -61,6 +71,13 @@ class CartedProd(ormar.Model):
     entry_id: int = ormar.Integer(primary_key = True, auto_increment=True)
     user_id: Optional[User] = ormar.ForeignKey(User)
     product_id: Optional[Product] = ormar.ForeignKey(Product)
+
+    def to_json(self):
+        return {
+            'entry_id': self.entry_id,
+            'user_id': self.user_id.id if self.user_id is not None else None,
+            'product_id': self.product_id.id if self.product_id is not None else None
+        }
 
 
 engine = sqlalchemy.create_engine(settings.db_url)

@@ -1,19 +1,20 @@
-
 from ..db.db import database, User, Website, Product, CartedProd
+from app.backend.utils import get_password_hash
 
 async def add_user():
+    True
     ### This is for clean up, DELETES all tables ###
-    # await CartedProd.objects.delete(each=True)
-    # await Product.objects.delete(each=True)
-    # await Website.objects.delete(each=True)
-    # await User.objects.delete(each=True)
+    await CartedProd.objects.delete(each=True)
+    await Product.objects.delete(each=True)
+    await Website.objects.delete(each=True)
+    await User.objects.delete(each=True)
     
-    u1 = await User.objects.get_or_create(email="andrei@test.com", password="andrei")
-    b = await User.objects.get_or_create(email="bogdan@test.com", password="bogdan")
-    ds = await User.objects.get_or_create(email="dragoS@test.com", password="dragoS")
-    da = await User.objects.get_or_create(email="drAgos@test.com", password="drAgos")
-    l = await User.objects.get_or_create(email="lucian@test.com", password="lucian")
-    r = await User.objects.get_or_create(email="robert@test.com", password="robert")
+    u1 = await User.objects.get_or_create(email="andrei@test.com", password=get_password_hash("andrei"))
+    b = await User.objects.get_or_create(email="bogdan@test.com", password=get_password_hash("bogdan"))
+    ds = await User.objects.get_or_create(email="dragoS@test.com", password=get_password_hash("dragoS"))
+    da = await User.objects.get_or_create(email="drAgos@test.com", password=get_password_hash("drAgos"))
+    l = await User.objects.get_or_create(email="lucian@test.com", password=get_password_hash("lucian"))
+    r = await User.objects.get_or_create(email="robert@test.com", password=get_password_hash("robert"), token="")
 
 
     ### websites in here ###
@@ -96,10 +97,9 @@ async def add_user():
     p5 = await Product.objects.get_or_create(website_id=pc_garage[0], product_name="Monitor LED GIGABYTE", category="IT", 
                                         image="https://2.grgs.ro/images/products/1/2216/2531995/full/gaming-m28u-ae-28-inch-uhd-ips-1-ms-144-hz-usb-c-hdr-freesync-premium-pro-ac94fc1a5d9eb096ec28bc264d821713.jpg",
                                         price="3.757,98")
-
+                                        
     ### add products in users carts here ###
     await CartedProd.objects.get_or_create(user_id=r[0], product_id=p1[0])
     await CartedProd.objects.get_or_create(user_id=r[0], product_id=p2[0])
     await CartedProd.objects.get_or_create(user_id=r[0], product_id=p3[0])
     await CartedProd.objects.get_or_create(user_id=r[0], product_id=p4[0])
-
