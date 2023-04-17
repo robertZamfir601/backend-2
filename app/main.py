@@ -3,9 +3,13 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from uvicorn import Config, Server
+
 from jose import jwt
 from pydantic import BaseModel
 from app.backend.utils import get_user
+
+from ormar import Model, Integer, String, QuerySet
+
 ### FAST api security
 from fastapi import HTTPException, status, FastAPI, HTTPException, Header
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -29,7 +33,7 @@ from .backend.RegLogin.register import add_user_to_database
 ##our files
 from .dependencies import get_token_header
 from .internal import admin
-from .routers import items, users
+from .routers import items, users, get_cart
 from .db.db import database, User, Website, Product, CartedProd
 from .test.test import add_user
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
@@ -39,6 +43,7 @@ app.mount("/frontend", StaticFiles(directory="app/frontend/static"), name="stati
 templates = Jinja2Templates(directory="./app/frontend/templates")
 app.include_router(users.router)
 app.include_router(items.router)
+app.include_router(get_cart.router)
 app.include_router(
     admin.router,
     prefix="/admin",
@@ -128,6 +133,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     return {"code": 200, "access_token": token}
 
 
+
 @app.on_event("startup")
 async def startup():
     if not database.is_connected:
@@ -135,10 +141,12 @@ async def startup():
     # create a dummy entry
     await add_user()
 
+
 @app.on_event("shutdown")
 async def shutdown():
     if database.is_connected:
         await database.disconnect()
+
 
 if __name__ == "__main__":  # pragma: no cover
     server = Server(

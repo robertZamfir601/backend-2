@@ -40,7 +40,7 @@ async def add_user():
     p5 = await Product.objects.get_or_create(website_id=pc_garage[0], product_name="Monitor LED GIGABYTE", category="IT", 
                                         image="https://2.grgs.ro/images/products/1/2216/2531995/full/gaming-m28u-ae-28-inch-uhd-ips-1-ms-144-hz-usb-c-hdr-freesync-premium-pro-ac94fc1a5d9eb096ec28bc264d821713.jpg",
                                         price="3.757,98")
-
+                                        
     ### add products in users carts here ###
     await CartedProd.objects.get_or_create(user_id=r[0], product_id=p1[0])
     await CartedProd.objects.get_or_create(user_id=r[0], product_id=p2[0])
