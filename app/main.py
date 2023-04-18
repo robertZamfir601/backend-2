@@ -99,9 +99,12 @@ async def registerUser(request: Request,
 ###
 
 
-@app.get("/profile", response_class=HTMLResponse)
-async def profile(request: Request):
-    return templates.TemplateResponse("profile.html",{ "request": request })
+@app.get("/profile", response_class=HTMLResponse, )
+async def profile(request: Request, token: Annotated[str | None, Cookie()] = None):
+    if token == None:
+        return templates.TemplateResponse("index.html",{ "request": request })
+    else:
+        return templates.TemplateResponse("profile.html",{ "request": request })
 
 class Token(BaseModel):
     access_token: str
