@@ -1,4 +1,4 @@
-from fastapi import Depends, FastAPI, Request, Cookie
+from fastapi import Depends, FastAPI, Request, Cookie, Form
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
@@ -123,6 +123,15 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     print(jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)['exp'])
     return {"code": 200, "access_token": token}
 
+
+
+
+@app.post("/forms/contact.php")
+async def login_for_access_token(email: Annotated[str, Form()], name: Annotated[str, Form()], subject: Annotated[str, Form()], message: Annotated[str, Form()]):
+    print("email:" + email)
+    print("name:" + name)
+    print("subject:" + subject)
+    print("message:" + message)
 
 
 @app.on_event("startup")
