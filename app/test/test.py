@@ -4,10 +4,10 @@ from app.backend.utils import get_password_hash
 async def add_user():
     True
     ### This is for clean up, DELETES all tables ###
-    await CartedProd.objects.delete(each=True)
-    await Product.objects.delete(each=True)
-    await Website.objects.delete(each=True)
-    await User.objects.delete(each=True)
+    # await CartedProd.objects.delete(each=True)
+    # await Product.objects.delete(each=True)
+    # await Website.objects.delete(each=True)
+    # await User.objects.delete(each=True)
     
     u1 = await User.objects.get_or_create(email="andrei@test.com", password=get_password_hash("andrei"))
     b = await User.objects.get_or_create(email="bogdan@test.com", password=get_password_hash("bogdan"))

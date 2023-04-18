@@ -55,10 +55,9 @@ background-position: center center;
   padding: 0.75rem 1rem;
 }
 </style>
+<!-- defer -> loads after the body-->
 
-
-    
-
+<script defer src="/frontend/js/register/register.js"></script>
 <div class="container-fluid ps-md-0">
     <div class="row g-0">
         
@@ -69,21 +68,21 @@ background-position: center center;
             <div class="row">
               <div class="col-md-9 col-lg-8 mx-auto">
                 <h3 class="login-heading mb-4">Start today to change your shooping habbits!</h3>
-  
                 <!-- Sign In Form -->
-                <form action="http://localhost:8000/register" method="post" autocomplete="off">
+                <div id="error" style="color:brown"></div>
+                <form name="regFrom" id="regForm" autocomplete="off">
                   <div class="form-floating mb-3">
-                    <input name="username" type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                    <input name="username" type="email" class="form-control" id="username" placeholder="name@example.com" required>
                     <label for="floatingInput">Email address</label>
                   </div>
                   <div class="form-floating mb-3">
-                    <input name="password" type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                    <input name="password" type="password" class="form-control" id="password" placeholder="Password" required>
                     <label for="floatingPassword">Password</label>
                   </div>
   
                   <div class="form-floating mb-3">
-                    <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-                    <label for="floatingPassword">Confirm Password</label>
+                    <input type="password" class="form-control" id="floatingPassword_verif" placeholder="Password" required>
+                    <label for="floatingPassword_verif">Confirm Password</label>
                   </div>
   
                   <div class="d-grid">
@@ -92,7 +91,56 @@ background-position: center center;
                       <a class="small" href="#">Forgot password?</a>
                     </div>
                   </div>
-  
+
+
+                  <div>
+                      <script src="https://accounts.google.com/gsi/client" async defer></script>
+                      <div id="g_id_onload"
+                           data-client_id="829120611572-clp4nv8n5sjhvn7dh1oqq32egp9ef931.apps.googleusercontent.com"
+                           data-callback="onSignIn">
+                      <div class="g_id_signin" data-type="standard"></div>
+                      <script>async function onSignIn(googleUser) {
+                           console.log(googleUser)
+                           console.log(googleUser.credential)
+                           
+                           try {
+                           let res = await fetch('http://localhost:8000/swap_token', {
+                              method: "POST",
+                              headers: {
+                                 'Accept': 'application/json',
+                                 "Content-Type": "application/json",
+                              },
+                              body: JSON.stringify({"token": googleUser.credential}),
+                           })
+                           console.log(res)
+                  
+                           let messages = [];
+                           
+                           if (res.status !== 200) {
+                              console.log("Bad ")
+                              console.log(res.detail)
+                              messages.push('We colud not log ypu in')
+                              errorElement.innerText = messages.join('\n')
+                           } else {
+                              let d = await res.json()
+                              console.log("Good ")
+                              token = d.token;
+                              const expires = new Date(Date.now() + 3600 * 1000 * 24); // 24 hours from now
+                              document.cookie = `token=${token}; expires=${expires.toUTCString()}; path=/`;
+                  
+                              window.location.href = "/profile"
+                  
+                              console.log(d.status)
+                           }
+                           
+                           return response
+                           } catch (error) {
+                              console.log("error " + error)
+                          }
+                          };</script>
+                    </div>
+                  </div>
+
                 </form>
               </div>
             </div>

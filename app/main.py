@@ -15,8 +15,12 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from datetime import datetime, timedelta
 from typing import Annotated, Union
 ### Register - Login ours
-from .backend.utils import ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, authenticate_user, SECRET_KEY, ALGORITHM
-from .backend.RegLogin.register import add_user_to_database
+from starlette.responses import JSONResponse, HTMLResponse
+from .backend.utils import ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, authenticate_user, SECRET_KEY, ALGORITHM, add_token_to_user
+from .backend.RegLogin.register import add_user_to_database, register_or_login_with_google
+## Login Google
+from google.oauth2 import id_token
+from google.auth.transport import requests
 ##our files
 from .dependencies import get_token_header
 from .internal import admin
@@ -82,7 +86,7 @@ async def registerUser(request: Request,
             detail="Username already taken",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    else:
+    else:   
         user = await add_user_to_database(form_data.username, form_data.password)
     if not user:
             raise HTTPException(
@@ -93,11 +97,62 @@ async def registerUser(request: Request,
     else:
         access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
         access_token = create_access_token(
-        data={"sub": user.email}, expires_delta=access_token_expires)
+            data={"email": user.email}, expires_delta=access_token_expires)
+        add_token_to_user(user.email, access_token)
         print(access_token)
-        return templates.TemplateResponse("profile.html",{ "request": request })
+        
+        return JSONResponse(content={"status": "200", "message": "Registered successfully", "token": access_token})
 ###
 
+
+### login google
+
+### setup
+COOKIE_AUTHORIZATION_NAME = "Authorization"
+COOKIE_DOMAIN = "localhost"
+PROTOCOL = "http://"
+FULL_HOST_NAME = "localhost"
+PORT_NUMBER = 8000
+CLIENT_ID = "829120611572-clp4nv8n5sjhvn7dh1oqq32egp9ef931.apps.googleusercontent.com"
+###
+
+### paths 
+@app.get("/google_login_client", response_class=HTMLResponse)
+async def google_login_client(request: Request):
+    return templates.TemplateResponse("loginGoogle.html",{ "request": request })
+
+async def decode(token):
+    try:
+        # Specify the CLIENT_ID of the app that accesses the backend:
+        idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
+
+        # ID token is valid. Get the user's Google Account ID from the decoded token.
+        userid = idinfo['sub']
+        email = idinfo['email']
+
+        user = await register_or_login_with_google(email, token)
+        print("Acas")
+        access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        access_token = create_access_token(
+                    data={"email": email}, expires_delta=access_token_expires)
+        print("Almost")
+        await add_token_to_user(email, access_token)
+        return JSONResponse(content={"status": "200", "message": "Login successfully", "token": access_token})
+    except ValueError:
+        # Invalid token
+        print("E de rau aici")
+        return  JSONResponse(content={"status": "400", "message": "You are far away from home"})
+
+class MyToken23(BaseModel):
+    token: str
+
+
+@app.post("/swap_token", response_model=MyToken23)
+async def swap_token(item: MyToken23):
+    print(item.token)
+    res = await decode(item.token)
+    return res
+###
 
 @app.get("/profile", response_class=HTMLResponse, )
 async def profile(request: Request, token: Annotated[str | None, Cookie()] = None):
