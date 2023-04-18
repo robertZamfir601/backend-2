@@ -56,8 +56,8 @@
           <li><a class="nav-link scrollto " href="#pricing">Price</a></li>
           <li><a class="nav-link scrollto" href="#teaming">Team</a></li>
           <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
-          <li><a class="nav-link scrollto" href="/get_cart">Cart</a></li>
-          <li><a class="getstarted scrollto" href="/logout">Logout</a></li>
+          <li><a class="nav-link scrollto" href="/profile">Cart</a></li>
+          <li><a class="getstarted scrollto" onclick="deleteAllCookies()" href="/">Logout</a></li>
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
@@ -73,7 +73,6 @@
         <div class="col-xl-5 col-lg-6 pt-3 pt-lg-0 order-2 order-lg-1 d-flex flex-column justify-content-center">
           <h1>Connect all your online shooping carts with us</h1>
           <h2>We are here to help you to find your product faster at a good price </h2>
-          <div><a href="register.html" class="btn-get-started scrollto">Get Started</a></div>
         </div>
         <div class="col-xl-4 col-lg-6 order-1 order-lg-2 hero-img" data-aos="zoom-in" data-aos-delay="150">
           <img src="frontend/img/hero-img.png" class="img-fluid animated" alt="">
@@ -689,7 +688,18 @@
   <script src="frontend/vendor/isotope-layout/isotope.pkgd.min.js"></script>
   <script src="frontend/vendor/swiper/swiper-bundle.min.js"></script>
   <script src="frontend/vendor/php-email-form/validate.js"></script>
+  <script>
+    function deleteAllCookies() {
+     var cookies = document.cookie.split(';');
 
+      for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i];
+        var eqPos = cookie.indexOf('=');
+        var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+        document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      }
+  }
+  </script>
   <!-- Template Main JS File -->
   <script src="frontend/js/main.js"></script>
 

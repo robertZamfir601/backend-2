@@ -130,7 +130,7 @@ const form = document.getElementById('form');
       if (response.code == '200') {
         const token = response.access_token;
         const expires = new Date(Date.now() + 3600 * 1000 * 24); // 24 hours from now
-        document.cookie = `token=${token}; expires=${expires.toUTCString()}; path=/`;
+        document.cookie = `token=${token}; expires=${expires.toUTCString()}; path=/; SameSite=Strict`;
         console.log(document.cookie);
         // Redirect to success page
         window.location.href = '/profile';

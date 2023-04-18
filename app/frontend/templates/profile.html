@@ -51,11 +51,11 @@
 		  font-size: 15px;
 		  transition: 0.4s;
 		}
-		
+
 		.active, .accordion:hover {
-		  background-color: #ccc; 
+		  background-color: #ccc;
 		}
-		
+
 		.panel {
 		  padding: 0 18px;
 		  display: none;
@@ -64,8 +64,8 @@
 		}
 		</style> -->
  </head>
- <body>
-	
+ <body onload="getProducts()">
+
 	<!-- ======= Header ======= -->
 	<header id="header" class="fixed-top ">
 	   <div class="container d-flex align-items-center justify-content-between">
@@ -75,10 +75,10 @@
 		  <nav id="navbar" class="navbar">
 			 <ul>
 				<li><a class="nav-link scrollto" href="/">Home</a></li>
-				<li><a class="nav-link scrollto active" href="">Cart</a></li>
 				<li><a class="nav-link scrollto" href="/#about">About</a></li>
 				<li><a class="nav-link scrollto" href="/#contact">Contact</a></li>
-				<li><a class="getstarted scrollto" href="logout.html">Logout</a></li>
+				<li><a class="nav-link scrollto active" href="">Cart</a></li>
+				<li><a class="getstarted scrollto" onclick="deleteAllCookies()" href="/">Logout</a></li>
 			 </ul>
 			 <i class="bi bi-list mobile-nav-toggle"></i>
 		  </nav>
@@ -203,6 +203,20 @@
 		  </div>
 		</div>
 </section>
+
+<script>
+	function deleteAllCookies() {
+ 	var cookies = document.cookie.split(';');
+
+  	for (var i = 0; i < cookies.length; i++) {
+    	var cookie = cookies[i];
+    	var eqPos = cookie.indexOf('=');
+    	var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+    	document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+  	}
+}
+</script>
+
 <script>
   	var acc1 = document.getElementById("acc-1");
 	acc1.addEventListener("click", function() {
