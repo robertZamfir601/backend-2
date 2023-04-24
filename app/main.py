@@ -15,12 +15,13 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from datetime import datetime, timedelta
 from typing import Annotated, Union
 ### Register - Login ours
-from .backend.utils import ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, authenticate_user, SECRET_KEY, ALGORITHM
+from starlette.responses import JSONResponse, HTMLResponse
+from .backend.utils import ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, authenticate_user, SECRET_KEY, ALGORITHM, add_token_to_user
 from .backend.RegLogin.register import add_user_to_database
 ##our files
 from .dependencies import get_token_header
 from .internal import admin
-from .routers import items, users, websites, get_cart
+from .routers import items, users, websites, get_cart, register
 from .db.db import database, User, Website, Product, CartedProd
 from .test.test import add_user
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
@@ -39,6 +40,7 @@ app.include_router(
     dependencies=[Depends(get_token_header)],
     responses={418: {"description": "I'm a teapot"}},
 )
+app.include_router(register.router)
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
@@ -65,6 +67,11 @@ async def login(request: Request):
 
 
 ###
+@app.get("/google_login_client", response_class=HTMLResponse)
+async def google_login_client(request: Request):
+    return templates.TemplateResponse("loginGoogle.html",{ "request": request })
+
+
 @app.get("/register", response_class=HTMLResponse)
 async def register(request: Request):
     return templates.TemplateResponse("register.html",{ "request": request })
@@ -82,7 +89,7 @@ async def registerUser(request: Request,
             detail="Username already taken",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    else:
+    else:   
         user = await add_user_to_database(form_data.username, form_data.password)
     if not user:
             raise HTTPException(
@@ -93,11 +100,12 @@ async def registerUser(request: Request,
     else:
         access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
         access_token = create_access_token(
-        data={"sub": user.email}, expires_delta=access_token_expires)
+            data={"email": user.email}, expires_delta=access_token_expires)
+        add_token_to_user(user.email, access_token)
         print(access_token)
-        return templates.TemplateResponse("profile.html",{ "request": request })
+        
+        return JSONResponse(content={"status": "200", "message": "Registered successfully", "token": access_token})
 ###
-
 
 @app.get("/profile", response_class=HTMLResponse, )
 async def profile(request: Request, token: Annotated[str | None, Cookie()] = None):

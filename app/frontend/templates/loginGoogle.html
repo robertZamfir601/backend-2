@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/Article">
+<head>
+    <meta charset="UTF-8">
+    <title>Google Login</title>
+    
+    
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <div id="g_id_onload"
+         data-client_id="829120611572-clp4nv8n5sjhvn7dh1oqq32egp9ef931.apps.googleusercontent.com"
+         data-callback="onSignIn">
+         <!-- data-callback="onSignIn" -->
+    </div>
+    <div class="g_id_signin" data-type="standard"></div>
+    <body>
+    
+    <script>async function onSignIn(googleUser) {
+         console.log(googleUser)
+         console.log(googleUser.credential)
+         
+         try {
+         let res = await fetch('http://localhost:8000/swap_token', {
+            method: "POST",
+            headers: {
+               'Accept': 'application/json',
+               "Content-Type": "application/json",
+            },
+            body: JSON.stringify({"token": googleUser.credential}),
+         })
+         console.log(res)
+
+         let messages = [];
+         
+         if (res.status !== 200) {
+            console.log("Bad ")
+            console.log(res.detail)
+            messages.push('We colud not log ypu in')
+            errorElement.innerText = messages.join('\n')
+         } else {
+            let d = await res.json()
+            console.log("Good ")
+            token = d.token;
+            const expires = new Date(Date.now() + 3600 * 1000 * 24); // 24 hours from now
+            document.cookie = `token=${token}; expires=${expires.toUTCString()}; path=/`;
+
+            window.location.href = "/profile"
+
+            console.log(d.status)
+         }
+         
+         return response
+         } catch (error) {
+            console.log("error " + error)
+   }
+   };</script>
+<div><br></div>
+</head>
+</body>
+</html>

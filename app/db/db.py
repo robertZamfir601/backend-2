@@ -20,11 +20,11 @@ class User(ormar.Model):
     class Meta(BaseMeta):
         tablename = "Users"
 
-    id: int = ormar.Integer(primary_key=True, auto_increment=True)                                       # auto-increment automatically set to True
+    id: int = ormar.Integer(primary_key=True, auto_increment=True)                      # auto-increment automatically set to True
     email: str = ormar.String(max_length=100, unique=True, nullable=False)
-    password: str = ormar.String(max_length=300, nullable=True, default="")        	# can have this of token_google, but not both
-    token_google: str = ormar.String(max_length=300, nullable=True, default="")     # can have this of password, but not both
-    creted_at: datetime.datetime = ormar.DateTime(default=datetime.datetime.now)	# set to crt datetime each time you call an endpoint
+    password: str = ormar.String(max_length=300, nullable=True, default="")        	    # can have this of token_google, but not both
+    token_google: str = ormar.String(max_length=1500, nullable=True, default="")        # can have this of password, but not both
+    creted_at: datetime.datetime = ormar.DateTime(default=datetime.datetime.now)	    # set to crt datetime each time you call an endpoint
     token: str = ormar.String(max_length=500, nullable=True, default="")
 
 class Website(ormar.Model):
