@@ -12,7 +12,6 @@ async function  logMeIn() {
          },
          mode: 'no-cors'
       })
-      console.log(response)
       return response
    } catch (error) {
       console.log("error " + error)
@@ -29,11 +28,6 @@ regForm.addEventListener("submit", regSubmit)
 
 async function regSubmit(event) { 
    event.preventDefault()
-   // log.textContent = `Form Submitted! Timestamp: ${event.timeStamp}`;
-   console.log(username.value)
-   console.log(password.value)
-   console.log(re_password.value)
-  
    let messages = [];
 
    if (username.value === '' || username.value == null ) {
@@ -50,20 +44,15 @@ async function regSubmit(event) {
       let res = await logMeIn();
 
       if (res.status === 401) {
-         console.log("Bad ")
-         console.log(res.detail)
          messages.push('Email already taken')
          errorElement.innerText = messages.join('\n')
       } else if (res.status === 200) {
          let d = await res.json()
-         console.log("Good ")
          token = d.token;
          const expires = new Date(Date.now() + 3600 * 1000 * 24); // 24 hours from now
          document.cookie = `token=${token}; expires=${expires.toUTCString()}; path=/`;
 
          window.location.href = "/profile"
-
-         console.log(d.status)
       }
    }
 }
