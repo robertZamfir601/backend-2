@@ -70,3 +70,12 @@ def create_access_token(data: dict, expires_delta: Union[timedelta, None] = None
     return encoded_jwt
 
 
+async def add_token_to_user(email: str, token: str):
+    try:
+        user = await User.objects.get(email=email)
+        user.token = token
+        await user.update()
+        print("Updated token")
+    except:
+        print("Can't update token for inexistent user")
+        user = None

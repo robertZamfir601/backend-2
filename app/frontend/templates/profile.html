@@ -27,21 +27,21 @@
 	<link href="frontend/css/profile.css" rel="stylesheet">
 
  </head>
- <body>
-	
+ <body onload="getProducts()">
+
 	<!-- ======= Header ======= -->
 	<header id="header" class="fixed-top ">
 	   <div class="container d-flex align-items-center justify-content-between">
-		  <h1 class="logo"><a href="/">Karti</a></h1>
+		  <h1 class="logo"><a href="/">Saley</a></h1>
 		  <!-- Uncomment below if you prefer to use an image logo -->
 		  <!-- <a href="index.html" class="logo"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
 		  <nav id="navbar" class="navbar">
 			 <ul>
 				<li><a class="nav-link scrollto" href="/">Home</a></li>
-				<li><a class="nav-link scrollto active" href="">Cart</a></li>
 				<li><a class="nav-link scrollto" href="/#about">About</a></li>
 				<li><a class="nav-link scrollto" href="/#contact">Contact</a></li>
-				<li><a class="getstarted scrollto" href="logout.html">Logout</a></li>
+				<li><a class="nav-link scrollto active" href="">Cart</a></li>
+				<li><a class="getstarted scrollto" onclick="deleteAllCookies()" href="/">Logout</a></li>
 			 </ul>
 			 <i class="bi bi-list mobile-nav-toggle"></i>
 		  </nav>
@@ -151,7 +151,22 @@
 			 </div>
 		  </div>
 		</div>
-	</section>
+    
+</section>
+
+<script>
+	function deleteAllCookies() {
+ 	var cookies = document.cookie.split(';');
+
+  	for (var i = 0; i < cookies.length; i++) {
+    	var cookie = cookies[i];
+    	var eqPos = cookie.indexOf('=');
+    	var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+    	document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+  	}
+}
+</script>
+
 <script>
   	var acc1 = document.getElementById("acc-1");
 	acc1.addEventListener("click", function() {

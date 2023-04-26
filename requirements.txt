@@ -4,3 +4,10 @@ jinja2
 asyncpg
 ormar
 psycopg2-binary
+passlib
+python-jose
+python-multipart
+typing
+pydantic
+oauth2client
+google-api-python-client
