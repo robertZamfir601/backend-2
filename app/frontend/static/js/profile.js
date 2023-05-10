@@ -19,8 +19,7 @@
 //       price: "29.99",
 //       image: "https://cermariner.ro/wp-content/uploads/2019/05/hoodie-with-zipper.jpg",
 //       wedsite_base_url: "https://www.emag.ro/laptop-hp-250-g9-cu-procesor-intelr-coretm-i5-1235u-pana-la-4-40-ghz-15-6-full-hd-8gb-256gb-ssd-intelr-irisr-xe-graphics-free-dos-dark-ash-silver-6f1z9ea/pd/DJ2VBZMBM/"
-//     }
-//     ,
+//     },
 //     {
 //       id: 3,
 //       product_name: "Laptop",
@@ -65,19 +64,20 @@ function ex(products) {
     for (let i = 0; i < products.length; i++) {
       const product = products[i];
       let cards_boots=`
-              <div class="card col-12">
-              <div class="row">
-              <div class="crop col-12" style="width:100%">
-                   <img src=${product.image} alt="Card image cap">
+            <div class="col-12 col-md-6 col-lg-4">
+              <div class="card">
+                <div class="row">
+                  <div class="crop" style="width:100%">
+                      <img src=${product.image} alt="Card image cap">
+                  </div>
+                  <div class="card-body">
+                      <h5 class="card-title">${product.product_name}</h5>
+                      <a href="${product.website_base_url}" class="btn btn-primary">${product.price}</a>
+                  </div>
+                </div>
               </div>
-              <div class="card-body col-12">
-                  <h5 class="card-title">${product.product_name}</h5>
-                  <a href="${product.website_base_url}" class="btn btn-primary">${product.price}</a>
-              </div>
-              </div>
-              </div>
-              `;
-              //document.getElementById("product-list-tag-id").innerHTML +=cards_boots;
+            </div>
+            `;
               productContainer.innerHTML += cards_boots;
     }
 }
